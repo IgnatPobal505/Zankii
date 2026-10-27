@@ -1,62 +1,79 @@
-# Zankii
+# Zankii — Wave Arcade
 
-**[Играть в браузере →](https://ignatpobal505.github.io/Zankii/)**
+**[Play in your browser →](https://ignatpobal505.github.io/Zankii/)**
 
-Три коротких мира и один Wave. Зажимаешь — летишь вверх, отпускаешь — вниз. Лови ритм, проходи препятствия и долетай до финиша.
+Hold. Release. Break through. Ten original Wave courses with blocks, slaloms, moving gates, rotating saws and five portal types. No installation, build step or external libraries.
 
-Это первая играбельная версия: уже с настоящими трассами, столкновениями, победой, повторными попытками и сохранением рекордов.
+## Ten different courses
 
-## Первые три уровня
-
-| Уровень | Настроение | Длина | Сложность |
+| # | Course | Difficulty | Main challenge |
 | --- | --- | --- | --- |
-| [01 · Мятный поток](https://ignatpobal505.github.io/Zankii/#mint) | Светлый, мятный и спокойный | 42 секунды | Лёгкий |
-| [02 · Лунный свет](https://ignatpobal505.github.io/Zankii/#lunar) | Ночное небо, луна, фиолетовые кристаллы | 46 секунд | Средний |
-| [03 · Ква-код](https://ignatpobal505.github.io/Zankii/#frog) | Лягушка, зелёно-фиолетовый мир и «пинг: ква» | 48 секунд | С характером |
+| 01 | [Circuit Break](https://ignatpobal505.github.io/Zankii/#circuit-break) | Easy | Broad block slalom, staircase and a first speed sector |
+| 02 | [Ion Drive](https://ignatpobal505.github.io/Zankii/#ion-drive) | Easy | Moving gates and rotating saws |
+| 03 | [Lunar Shift](https://ignatpobal505.github.io/Zankii/#lunar-shift) | Normal | Inverted gravity with restoration portals |
+| 04 | [Pocket Storm](https://ignatpobal505.github.io/Zankii/#pocket-storm) | Normal | Mini Wave, steeper flight and size transitions |
+| 05 | [Rift Runner](https://ignatpobal505.github.io/Zankii/#rift-runner) | Hard | Linked teleports, clear exit markers and lane transfers |
+| 06 | [Dual Core](https://ignatpobal505.github.io/Zankii/#dual-core) | Hard | Two mirrored Waves through separate lanes |
+| 07 | [Phase Factory](https://ignatpobal505.github.io/Zankii/#phase-factory) | Hard | Machinery mixed with mini, gravity and teleport sectors |
+| 08 | [Redline](https://ignatpobal505.github.io/Zankii/#redline) | Insane | Fast block slalom, tight gates and precision transitions |
+| 09 | [Event Horizon](https://ignatpobal505.github.io/Zankii/#event-horizon) | Insane | Dual lanes, teleports and inverted control |
+| 10 | [Final Protocol](https://ignatpobal505.github.io/Zankii/#final-protocol) | Extreme | Every mechanic in the most demanding sequence |
 
-Все уровни доступны сразу. «Тёплый закат» остался только среди старых эскизов и не используется в игре.
+All ten courses are available immediately. The final three are intentionally much harder. Difficulty comes from clearance, speed, obstacles and mechanic combinations; duration is not used as a difficulty rating. The original three routes have been replaced, including the retired frog course.
 
-## Управление
+## Controls
 
-- **Удерживай пробел, стрелку вверх, левую кнопку мыши или палец на игровом поле:** движение по диагонали вверх.
-- **Отпусти:** движение по диагонали вниз.
-- **Esc:** пауза и продолжение.
-- **R:** начать уровень заново.
-- Кнопка **♫** включает тихую оригинальную музыку. По умолчанию звук выключен.
-- Кнопка **⛶** раскрывает игровое поле на весь экран, если браузер поддерживает эту возможность.
+- Hold **Space**, **A**, **any arrow key**, the **left mouse button**, or **touch the playing field** to climb.
+- Release to dive. Multiple held controls work together: releasing one does not cancel another.
+- **Inverted gravity reverses hold/release direction.** A visible restoration portal returns normal controls.
+- **R** restarts the course; **Esc** pauses/resumes. Switching away also pauses and releases input.
+- **♫** enables original browser-generated music. Sound starts off.
+- **⛶** enables fullscreen where supported. Phones are easier to play in landscape.
 
-На телефоне удобнее играть горизонтально. Рекорды и количество попыток сохраняются в этом браузере. Уход со вкладки автоматически ставит игру на паузу.
+Physical **KeyA** also works with the Russian keyboard layout (the **Ф** key).
 
-## Персонаж и оформление
+## Portals
 
-Fat Wave: тёмно-синий внешний корпус и фиолетовая середина. Во всех мирах одинаковое управление и одинаковый размер области столкновения. Препятствия расставлены отдельно, без лишних шипов внутри других шипов.
+| Portal | What it really changes |
+| --- | --- |
+| Speed | Flight speed, including 0.80× slow sectors, normal speed and boosts up to 1.60× |
+| Mini / Normal | Character and collision size; Mini has twice the vertical-to-horizontal velocity ratio |
+| Gravity | Reverses the vertical response; restoration returns it to normal |
+| Teleport | Moves to the marked orange exit; the trail breaks instead of crossing the intervening wall |
+| Dual / Single | Adds/removes a mirrored second Wave; both characters have active collisions |
 
-Графика рисуется непосредственно в игре; установка и загрузка дополнительных библиотек не нужны. Музыка создаётся средствами браузера, без внешних аудиофайлов.
+Portals are labelled in advance. A live HUD shows size, dual state, speed and control direction. Rotating saws and moving gates have visible motion tracks. A red impact ring and a specific collision message explain failed runs.
 
-## Для работы над проектом
+## Practice and accessibility
 
-Статическая игра на HTML, CSS и JavaScript, без сборки и сторонних зависимостей.
+Enable **Practice mode** on the course's start panel and optionally choose a starting sector. Safe checkpoints are saved after entering sectors. Retry restores position, simulation time, portal state and moving-hazard phase. Practice never saves a normal completion or personal best.
+
+**Settings → Low effects** simplifies rendering and removes glow. **Portal pulse** is off by default and only draws a local activation ring when enabled. There is no full-screen strobe or camera shake. Graphics settings do not change collision or timing.
+
+Normal records use `zankii-progress-v2`. The previous release's `zankii-progress-v1` data is left intact but is not transferred onto rebuilt routes. Settings use `zankii-settings-v2`. All storage is local to the browser; the game also works when storage is unavailable.
+
+## Development and verification
 
 ```sh
 python3 -m http.server 4173 --bind 127.0.0.1
 ```
 
-После запуска открыть `http://127.0.0.1:4173`. Через двойной щелчок по HTML модули могут не загрузиться — использовать локальный сервер или ссылку на игру.
+Open `http://127.0.0.1:4173/`. An HTTP server is needed for JavaScript modules; opening the HTML file directly is not supported.
 
-Проверки механики (Node.js 18 или новее):
+With Node.js 18 or newer:
 
 ```sh
 npm test
 ```
 
-Проверяются проходимость всех трёх маршрутов обычным управлением, столкновения, отсутствие пересекающихся препятствий, мгновенная смена направления, пауза и одинаковое движение при разных частотах кадров.
+The tests complete all ten courses with ordinary hold/release inputs and live collisions; exercise every portal type; check both members of a dual; validate moving hazards, practice entry/checkpoint state, 30/60/144 Hz consistency, instant direction changes, pausing and collision tunnelling. These simulations prove a playable input path exists; they do not replace human difficulty tuning.
 
-Основные файлы: `engine.js` — уровни и механика, `game.js` — графика, звук и управление, `styles.css` — оформление меню. GitHub Pages публикует корень ветки `main`.
+Main files: `engine.js` (courses and fixed-step simulation), `render.js` (Canvas graphics), `game.js` (UI, audio, storage and input), `styles.css` (responsive interface). GitHub Pages serves the root of `main`.
 
-## История оформления
+## Research and references
 
-- [Правила проекта](AGENTS.md).
-- [Первоначальные эскизы](design/style-options/).
-- [Последний ночной эскиз](design/style-options/02-lunar-light-v3-clean-dark-blue.png).
+The reference comparison is recorded in [community-research.json](design/community-research.json), with source links, displayed likes/downloads and explicit limitations. Among the sampled pages, [Bloodbath](https://gdbrowser.com/10565740) and [Nine Circles](https://gdbrowser.com/4284013) have larger accumulated like counts than [Change of Scene](https://gdbrowser.com/90475473) and [Sonic Wave](https://gdbrowser.com/26681070). This is a small selection, not a global ranking or approval percentage; age and downloads differ. Routes, artwork and music in Zankii are original, rather than imported copies of those levels.
 
-Первоначальные эскизы созданы с помощью imagegen. Образец формы Fat Wave (Wave 17) взят из [каталога GDBrowser](https://gdbrowser.com/iconkit/); исходные игровые значки принадлежат RobTop Games. Фон, препятствия, лягушка и музыка в браузерной версии создаются кодом проекта.
+The user's supplied forum feedback informed route visibility, progressive difficulty, variety and optional effects. Direct retrieval of those forum threads timed out during this update, so their summary is attributed to the user rather than presented as independently verified survey findings. [Geode Texture Loader](https://geode-sdk.org/mods/geode.texture-loader) manages texture packs; its download count was not treated as a vote for any particular pack or course.
+
+Earlier imagegen concepts remain in [design/style-options](design/style-options/) as an archive. The Fat Wave shape reference comes from [GDBrowser's Icon Kit](https://gdbrowser.com/iconkit/), whose original game sprites belong to RobTop Games. Zankii keeps its dark-blue shell and violet centre.

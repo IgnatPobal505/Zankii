@@ -1,0 +1,24 @@
+{
+  "checkedOn": "2026-10-27",
+  "method": "Small, deliberately selected comparison of displayed likes and downloads on GDBrowser, plus the user's supplied forum summary. This is not a comprehensive community ranking. Likes are net counters, not an approval percentage; downloads are not unique players. Older levels have had more time to accumulate both.",
+  "levelComparisons": [
+    {"name":"Bloodbath","id":10565740,"likes":5663720,"downloads":194123430,"url":"https://gdbrowser.com/10565740"},
+    {"name":"Nine Circles","id":4284013,"likes":4004079,"downloads":130388824,"url":"https://gdbrowser.com/4284013"},
+    {"name":"Change of Scene","id":90475473,"likes":1185757,"downloads":29722533,"url":"https://gdbrowser.com/90475473"},
+    {"name":"Sonic Wave","id":26681070,"likes":1100225,"downloads":49017957,"url":"https://gdbrowser.com/26681070"}
+  ],
+  "geode": {"url":"https://geode-sdk.org/mods/geode.texture-loader","finding":"Geode's Texture Loader manages texture packs. Its download counter measures the mod's adoption, not votes for a particular level or pack; it was not used to rank level quality."},
+  "designDecisions": [
+    "Keep the Wave timing and speed/size/gravity/dual variation that motivated the reference search; author original routes, artwork and music.",
+    "Give each of the ten courses a different ordered mechanic sequence instead of using duration as a difficulty proxy.",
+    "Use large blocks, slalom, moving gates and visible rotating saws; label portals before crossing.",
+    "Keep teleport exits visible and leave an exit runway. Never hide lethal obstacles behind decoration.",
+    "No full-screen strobing. Optional local portal pulse is off by default. Low effects changes only rendering.",
+    "Add optional checkpoint practice; practice does not save a normal clear. Retain three genuinely difficult final courses."
+  ],
+  "userSuppliedForumSummary": {
+    "independentlyVerified": false,
+    "note": "The user supplied a summary after reading these threads. Direct web retrieval timed out during this update. Treat it as requested design feedback, not newly verified or statistically representative survey evidence.",
+    "urls":["https://gdforum.freeforums.net/thread/57553/ti-serious-example-good-gameplay","https://gdforum.freeforums.net/thread/66699/worst-geometry-dash-level-opinion","https://gdforum.freeforums.net/thread/63161/serious-most-hated-official-level","https://gdforum.freeforums.net/thread/66699/worst-geometry-dash-level-opinion?page=2","https://gdforum.freeforums.net/thread/59775/copies-accepted-beating-normal-level"]
+  }
+}

@@ -1,69 +1,39 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#101527">
-  <meta name="description" content="Zankii — три мира, один Wave. Зажми, чтобы лететь вверх, отпусти, чтобы лететь вниз.">
-  <title>Zankii — держи волну</title>
-  <link rel="icon" type="image/svg+xml" href="favicon.svg">
-  <link rel="stylesheet" href="styles.css">
+  <meta name="theme-color" content="#101423">
+  <meta name="description" content="Ten action-packed Wave courses. Five portal types. One input. Play Zankii free in your browser.">
+  <title>Zankii — Wave Arcade</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
   <div class="app">
     <header class="header">
-      <button class="brand" id="brand" aria-label="Zankii — главное меню">
-        <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M32 7a19 19 0 1 0 0 34l9-9-9-8 9-8Z" fill="#214aa2" stroke="#97b3ff" stroke-width="2"/><circle cx="22" cy="24" r="11" fill="#873aff"/><path d="M36 9h7v5h-7m0 20h7v5h-7" fill="#873aff"/></svg>
-        <span>ZANKII</span>
-      </button>
-      <span class="header-note">маленький полёт · большой вайб</span>
-      <button class="quiet-button sound-button" id="sound" aria-pressed="false" title="Включить или выключить музыку"><span id="sound-icon" aria-hidden="true">♫</span><span id="sound-label">Звук выкл.</span></button>
+      <button class="brand" id="brand" aria-label="Zankii level select"><svg viewBox="0 0 48 48" aria-hidden="true"><path d="M32 7a19 19 0 1 0 0 34l9-9-9-8 9-8Z" fill="#183b8c" stroke="#97b3ff" stroke-width="2"/><circle cx="22" cy="24" r="11" fill="#7d00ff"/><path d="M36 9h7v5h-7m0 20h7v5h-7" fill="#7d00ff"/></svg><span>ZANKII<small>WAVE ARCADE / VOL. 02</small></span></button>
+      <span class="header-note">TEN COURSES. ONE INPUT.</span>
+      <div class="header-actions"><button id="sound" class="quiet-button" aria-pressed="false"><span aria-hidden="true">♫</span><span id="sound-label">Sound off</span></button><button id="settings-open" class="quiet-button" aria-label="Game settings">⚙ <span>Settings</span></button></div>
     </header>
-
     <main id="menu">
-      <section class="hero">
-        <div class="hero-copy">
-          <div class="eyebrow"><span class="status-dot"></span> ТРИ МИРА. ОДИН WAVE.</div>
-          <h1>Держи<br><span>волну.</span></h1>
-          <p>Вверх — держишь. Вниз — отпускаешь.<br>А между ними — твой идеальный полёт.</p>
-          <button class="primary-button" id="quick-play">Начать полёт <span aria-hidden="true">↗</span></button>
-          <div class="hero-hint"><kbd>Пробел</kbd><span>мышь или касание экрана</span></div>
-        </div>
-        <div class="hero-art">
-          <canvas id="hero-canvas" width="880" height="650" aria-label="Лунный мир с Fat Wave и зигзагообразным следом"></canvas>
-          <span class="art-label"><span class="status-dot"></span> LUNAR LIGHT</span>
-          <span class="art-caption">поймай свой ритм ↗</span>
-        </div>
+      <section class="campaign">
+        <div class="campaign-copy"><span class="eyebrow"><i class="live-dot"></i> THE NEXT WAVE</span><h1>HOLD. RELEASE.<br><span>BREAK THROUGH.</span></h1><p>Block slaloms. Moving machinery. Five kinds of portals.<br>Ten different reasons to try one more time.</p><div class="campaign-actions"><button class="primary-button" id="quick-play">Play Circuit Break <span>↗</span></button><span id="campaign-progress">0 / 10 cleared</span></div></div>
+        <div class="campaign-art"><canvas id="hero-canvas" width="960" height="450" aria-label="Preview of rotating saws, blocks and a speed portal"></canvas><span class="preview-label">LIVE COURSE PREVIEW <i class="live-dot"></i></span><span class="preview-caption">FAT WAVE / DARK BLUE + VIOLET</span></div>
       </section>
-      <section class="levels-section" aria-labelledby="levels-title">
-        <div class="section-heading"><div><span class="eyebrow">ВЫБЕРИ НАСТРОЕНИЕ</span><h2 id="levels-title">Твой следующий полёт</h2></div><span class="level-count">01 — 03</span></div>
-        <div class="level-grid" id="level-grid"></div>
-      </section>
-      <footer class="footer"><span>ZANKII <span class="footer-slash">/</span> VOL. 01</span><span>Спокойный вид. Точный момент.</span><a href="https://github.com/IgnatPobal505/Zankii" target="_blank" rel="noopener noreferrer">Проект на GitHub ↗</a></footer>
+      <section class="course-section" aria-labelledby="courses-title"><div class="section-heading"><div><span class="eyebrow">CHOOSE YOUR CHALLENGE</span><h2 id="courses-title">Level select<span id="visible-count">10 courses</span></h2></div><div class="filters" id="filters" aria-label="Filter courses by difficulty"></div></div><div class="level-grid" id="level-grid"></div></section>
+      <section class="portal-guide"><span class="eyebrow">KNOW YOUR PORTALS</span><div id="portal-legend"></div><p>Hold <kbd>Space</kbd> <kbd>A</kbd> or any <kbd>Arrow</kbd> key to climb. Release to dive. Gravity portals reverse this. Mouse and touch work too.</p></section>
+      <footer class="footer"><span>ZANKII / TEN-COURSE UPDATE</span><span>Clear paths. Real challenge. No mandatory flashes.</span><a href="https://github.com/IgnatPobal505/Zankii" target="_blank" rel="noopener noreferrer">Source & development notes ↗</a></footer>
     </main>
-
     <main id="game-view" hidden>
-      <div class="game-heading"><button class="quiet-button" id="back">← Уровни</button><div class="level-title"><span id="game-number">01</span><h1 id="game-title">Мятный поток</h1></div><span class="attempt-label" id="attempt-label">Попытка 1</span></div>
-      <div class="game-hud"><span id="game-section">Первый полёт</span><div class="progress-track"><div id="progress-fill"></div></div><strong id="progress-label">0%</strong></div>
-      <div class="stage" id="stage">
-        <canvas id="game-canvas" width="1280" height="720" tabindex="0" aria-label="Игровое поле. Держи пробел, кнопку мыши или палец для движения вверх; отпусти для движения вниз."></canvas>
-        <div class="game-overlay" id="game-overlay">
-          <section class="overlay-card" role="dialog" aria-modal="true" aria-labelledby="overlay-title">
-            <span class="eyebrow" id="overlay-eyebrow">ПЕРВЫЙ ПОЛЁТ</span>
-            <h2 id="overlay-title">Поймай волну</h2>
-            <p id="overlay-text">Удерживай — вверх. Отпускай — вниз.</p>
-            <div id="overlay-stats" class="overlay-stats"></div>
-            <button class="primary-button" id="overlay-primary">Поехали ↗</button>
-            <button class="overlay-secondary" id="overlay-secondary">К уровням</button>
-          </section>
-        </div>
-        <span class="touch-hint" id="touch-hint">ДЕРЖИ ↗ &nbsp; ОТПУСКАЙ ↘</span>
-      </div>
-      <div class="game-bottom"><div class="input-hint"><kbd>Пробел</kbd><span>или держи на игровом поле</span></div><div class="game-actions"><button class="quiet-button" id="restart" title="Начать заново (R)">↻ Заново <kbd>R</kbd></button><button class="quiet-button" id="pause" title="Пауза (Esc)">Ⅱ Пауза <kbd>Esc</kbd></button><button class="quiet-button fullscreen" id="fullscreen" aria-label="На весь экран">⛶</button></div></div>
-      <p class="rotate-hint">На телефоне удобнее играть, повернув экран горизонтально.</p>
+      <div class="game-heading"><button class="quiet-button" id="back">← Levels</button><div class="level-title"><span id="game-number">01</span><h1 id="game-title">Circuit Break</h1><span class="difficulty-badge" id="game-difficulty">Easy</span></div><span class="attempt-label" id="attempt-label">Attempt 1</span></div>
+      <div class="game-hud"><span id="game-section">Launch control</span><div class="progress-track"><div id="progress-fill"></div></div><strong id="progress-label">0%</strong><span id="elapsed-label">0:00</span></div>
+      <div class="stage" id="stage"><canvas id="game-canvas" width="1280" height="720" tabindex="0" aria-label="Wave game. Hold Space, A, any arrow key, mouse or touch to climb; release to dive. Inverted gravity reverses this."></canvas><div class="flight-status" id="flight-status"><span id="wave-mode">NORMAL WAVE</span><span id="gravity-mode">HOLD ↗</span><span id="speed-mode">1.00×</span><span id="practice-status" hidden>PRACTICE</span></div><div class="portal-notice" id="portal-notice" hidden></div><div class="game-overlay" id="game-overlay"><section class="overlay-card" role="dialog" aria-modal="true" aria-labelledby="overlay-title"><span class="eyebrow" id="overlay-eyebrow"></span><h2 id="overlay-title"></h2><p id="overlay-text"></p><div id="overlay-mechanics" class="overlay-mechanics"></div><div id="overlay-stats" class="overlay-stats"></div><label class="practice-option" id="practice-option"><input type="checkbox" id="practice-toggle"> Practice mode <small>Checkpoints. No clear record.</small></label><button class="primary-button" id="overlay-primary">Start run ↗</button><button class="overlay-secondary" id="overlay-secondary">Level select</button></section></div></div>
+      <div class="game-bottom"><div class="input-hint"><kbd>Space</kbd><kbd>A</kbd><kbd>↑ ↓ ← →</kbd><span>hold / release</span></div><div class="game-actions"><button class="quiet-button" id="restart" title="Restart (R)">↻ Restart <kbd>R</kbd></button><button class="quiet-button" id="pause" title="Pause (Esc)">Ⅱ Pause <kbd>Esc</kbd></button><button class="quiet-button" id="fullscreen" aria-label="Fullscreen">⛶</button></div></div><p class="rotate-hint">Rotate your phone to landscape for a wider view.</p>
     </main>
-    <p id="announcement" class="sr-only" aria-live="polite"></p>
+    <dialog id="settings-dialog"><form method="dialog"><div class="settings-heading"><h2>Settings</h2><button class="quiet-button" value="close" aria-label="Close settings">✕</button></div><label class="setting-row"><span>Low effects<small>Less glow, fewer particles and a simpler background.</small></span><input type="checkbox" id="low-effects"></label><label class="setting-row"><span>Portal pulse<small>A short local ring on activation. No full-screen flashes.</small></span><input type="checkbox" id="portal-pulse"></label><p class="settings-note">These settings never change collision, timing or difficulty.</p><button class="primary-button" value="close">Done</button></form></dialog>
+    <p class="sr-only" id="announcement" aria-live="polite"></p>
   </div>
-  <script type="module" src="game.js"></script>
+  <script type="module" src="game.js?v=2"></script>
 </body>
 </html>
