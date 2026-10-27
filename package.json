@@ -1,10 +1,12 @@
 {
   "name": "zankii",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "private": true,
   "type": "module",
   "scripts": {
     "test": "node --test tests/*.test.js",
-    "start": "python3 -m http.server 4173 --bind 127.0.0.1"
+    "start": "python3 -m http.server 4173 --bind 127.0.0.1",
+    "ios:sync": "node scripts/sync-ios-web.mjs",
+    "ios:check": "node scripts/sync-ios-web.mjs --check"
   }
 }

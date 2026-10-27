@@ -1,5 +1,5 @@
-import { WORLD, LEVELS, DIFFICULTIES, PORTAL_INFO, isFlightKey, createLevel, createRun, createPracticeRun, advance, progress, sectionAt } from './engine.js?v=2';
-import { preview, render, accentFor, DIFFICULTY_COLORS } from './render.js?v=2';
+import { WORLD, LEVELS, DIFFICULTIES, PORTAL_INFO, isFlightKey, createLevel, createRun, createPracticeRun, advance, progress, sectionAt } from './engine.js?v=3';
+import { preview, render, accentFor, DIFFICULTY_COLORS } from './render.js?v=3';
 
 const $ = id => document.getElementById(id);
 const canvas = $('game-canvas'), context = canvas.getContext('2d');
@@ -27,12 +27,31 @@ let current = 0, run = null, inGame = false, held = false, filter = 'All', pract
 const keys = new Set(), pointers = new Set();
 let primaryAction = () => {}, secondaryAction = () => {}, lastFrame = 0, terminalHandled = false, noticeUntil = 0, lastEvent = null;
 let impactAt = 0, deathTimer = null, runGeneration = 0;
+let appActive = true, lastNativePlaying = null;
+const nativeBridge = window.webkit?.messageHandlers?.zankiiGame;
+const nativeIOS = window.zankiiNative?.platform === 'ios' || document.documentElement.classList.contains('native-ios');
+if (nativeIOS) document.documentElement.classList.add('native-ios');
+function syncPlatformState() {
+  const playing = Boolean(appActive && !document.hidden && inGame && run?.state === 'playing');
+  document.body.classList.toggle('is-playing', playing); $('hold-button').disabled = !playing;
+  if (nativeBridge && playing !== lastNativePlaying) {
+    try { nativeBridge.postMessage({ type: 'playing', value: playing }); lastNativePlaying = playing; }
+    catch { /* Browser play remains available if the native host disconnects. */ }
+  }
+}
+function showHeld() {
+  $('hold-button').setAttribute('aria-pressed', String(held));
+}
+function refreshHeld() { held = keys.size > 0 || pointers.size > 0; showHeld(); }
 
 class Sound {
-  constructor() { this.enabled = false; this.context = null; this.lastBeat = -1; }
+  constructor() { this.enabled = false; this.context = null; this.lastBeat = -1; this.voices = new Set(); }
   unlock() {
-    if (!this.enabled) return;
-    try { this.context ||= new (window.AudioContext || window.webkitAudioContext)(); if (this.context.state === 'suspended') this.context.resume().catch(() => {}); }
+    if (!this.enabled || !appActive || document.hidden) return;
+    try {
+      if (!this.context || this.context.state === 'closed') this.context = new (window.AudioContext || window.webkitAudioContext)();
+      if (this.context.state !== 'running') this.context.resume().catch(() => {});
+    }
     catch { this.enabled = false; updateSound(); }
   }
   tone(frequency, duration, volume = .025, type = 'sine', delay = 0, sweep = false) {
@@ -40,7 +59,7 @@ class Sound {
     const t = this.context.currentTime + delay, osc = this.context.createOscillator(), gain = this.context.createGain();
     osc.type = type; osc.frequency.setValueAtTime(frequency, t); if (sweep) osc.frequency.exponentialRampToValueAtTime(Math.max(30, frequency / 3), t + duration);
     gain.gain.setValueAtTime(0, t); gain.gain.linearRampToValueAtTime(volume, t + .008); gain.gain.exponentialRampToValueAtTime(.0001, t + duration);
-    osc.connect(gain); gain.connect(this.context.destination); osc.start(t); osc.stop(t + duration + .02); osc.onended = () => { osc.disconnect(); gain.disconnect(); };
+    osc.connect(gain); gain.connect(this.context.destination); this.voices.add(osc); osc.start(t); osc.stop(t + duration + .02); osc.onended = () => { this.voices.delete(osc); osc.disconnect(); gain.disconnect(); };
   }
   tick(time, level) {
     const beat = Math.floor(time * level.bpm / 60); if (beat === this.lastBeat) return; this.lastBeat = beat;
@@ -51,17 +70,20 @@ class Sound {
     if (beat % 2 === 0) this.tone(120, .13, .05, 'sine', 0, true); else this.tone(1200, .035, .006, 'triangle');
   }
   effect(name) {
-    this.unlock();
     if (name === 'dead') this.tone(140, .2, .035, 'triangle', 0, true);
     if (name === 'start') this.tone(440, .16, .02);
     if (name === 'portal') this.tone(660, .15, .012);
     if (name === 'win') [0, 4, 7, 12].forEach((n, i) => this.tone(261.63 * 2 ** (n / 12), .6, .028, 'sine', i * .1));
   }
-  mute() { if (this.context) this.context.suspend().catch(() => {}); }
+  mute() { for (const voice of this.voices) { try { voice.stop(); } catch { /* Already stopped. */ } } this.voices.clear(); if (this.context && this.context.state !== 'closed') this.context.suspend().catch(() => {}); }
 }
 const sound = new Sound();
-function updateSound() { $('sound').setAttribute('aria-pressed', String(sound.enabled)); $('sound-label').textContent = sound.enabled ? 'Sound on' : 'Sound off'; }
-$('sound').addEventListener('click', () => { sound.enabled = !sound.enabled; if (sound.enabled) sound.unlock(); else sound.mute(); updateSound(); });
+function updateSound() {
+  for (const id of ['sound', 'game-sound']) $(id).setAttribute('aria-pressed', String(sound.enabled));
+  $('game-sound').setAttribute('aria-label', sound.enabled ? 'Disable sound' : 'Enable sound');
+  $('sound-label').textContent = sound.enabled ? 'Sound on' : 'Sound off';
+}
+for (const id of ['sound', 'game-sound']) $(id).addEventListener('click', () => { sound.enabled = !sound.enabled; if (sound.enabled) sound.unlock(); else sound.mute(); updateSound(); });
 
 function difficultyStyle(element, difficulty) { element.style.setProperty('--difficulty-color', DIFFICULTY_COLORS[difficulty]); }
 function buildFilters() {
@@ -95,7 +117,7 @@ function buildLegend() {
     key.title = info.hint; key.innerHTML = `<i aria-hidden="true"></i>${name === 'size' ? 'Mini / Normal' : name[0].toUpperCase() + name.slice(1)}`; $('portal-legend').append(key);
   }
 }
-function clearInput() { held = false; keys.clear(); pointers.clear(); }
+function clearInput() { held = false; keys.clear(); pointers.clear(); showHeld(); }
 function announce(text) { $('announcement').textContent = text; }
 function clearDeathTimer() { if (deathTimer !== null) clearTimeout(deathTimer); deathTimer = null; runGeneration++; }
 function overlay(mode, eyebrow, title, text, primary, action, secondary = 'Level select', second = showMenu, stats = '') {
@@ -107,20 +129,21 @@ function overlay(mode, eyebrow, title, text, primary, action, secondary = 'Level
 }
 function hideOverlay() { $('game-overlay').hidden = true; canvas.focus({ preventScroll: true }); }
 function selectLevel(index) {
-  clearDeathTimer(); clearInput(); current = index; run = createRun(levels[index]); inGame = true; terminalHandled = false; checkpoint = null; checkpointSection = -1; practice = false; lastEvent = null;
+  clearDeathTimer(); clearInput(); sound.mute(); current = index; run = createRun(levels[index]); inGame = true; terminalHandled = false; checkpoint = null; checkpointSection = -1; practice = false; lastEvent = null;
   document.body.classList.add('in-game'); document.documentElement.style.setProperty('--game-accent', accentFor(run.level));
   $('menu').hidden = true; $('game-view').hidden = false; history.replaceState(null, '', `#${run.level.id}`);
   $('game-number').textContent = String(index + 1).padStart(2, '0'); $('game-title').textContent = run.level.name; $('game-difficulty').textContent = run.level.difficulty; difficultyStyle($('game-difficulty'), run.level.difficulty);
   $('attempt-label').textContent = `Attempts: ${recordFor(run.level.id).attempts}`; $('pause').disabled = true; $('practice-toggle').checked = false;
   practiceSector.replaceChildren(); run.level.sections.forEach((section, i) => { const option = document.createElement('option'); option.value = String(i); option.textContent = `${i + 1}. ${section.name}`; practiceSector.append(option); });
   $('overlay-mechanics').innerHTML = run.level.mechanics.map(m => `<span class="mechanic-chip" title="${PORTAL_INFO[m].hint}">${PORTAL_INFO[m].label}</span>`).join('');
-  overlay('ready', `${String(index + 1).padStart(2, '0')} / ${run.level.difficulty.toUpperCase()}`, run.level.name, `${run.level.subtitle}\nHold Space, A, any arrow, mouse or touch to climb. Release to dive.`, 'Start run ↗', () => startRun(false));
-  updateHud(); window.scrollTo({ top: 0, behavior: 'instant' });
+  overlay('ready', `${String(index + 1).padStart(2, '0')} / ${run.level.difficulty.toUpperCase()}`, run.level.name, `${run.level.subtitle}\nHold the HOLD button or the playfield to climb. Release to dive.`, 'Start run ↗', () => startRun(false));
+  updateHud(); syncPlatformState(); window.scrollTo({ top: 0, behavior: 'instant' });
 }
 function captureCheckpoint() {
   const { level, ...state } = run; checkpoint = structuredClone(state);
 }
 function startRun(initialHeld = false, retry = false) {
+  if (!appActive || document.hidden) return;
   clearDeathTimer();
   const fromCheckpoint = retry && practice && checkpoint;
   if (!retry) practice = $('practice-toggle').checked;
@@ -128,27 +151,30 @@ function startRun(initialHeld = false, retry = false) {
   run.state = 'playing'; terminalHandled = false; clearInput(); held = initialHeld; lastEvent = run.events.at(-1) || null; noticeUntil = 0;
   if (!retry) { checkpointSection = -1; checkpoint = null; if (practice) captureCheckpoint(); }
   recordFor(run.level.id).attempts++; saveRecords(); $('attempt-label').textContent = `Attempt ${recordFor(run.level.id).attempts}`;
-  $('pause').disabled = false; sound.lastBeat = -1; sound.effect('start'); hideOverlay(); updateHud();
+  $('pause').disabled = false; sound.lastBeat = -1; sound.unlock(); sound.effect('start'); hideOverlay(); updateHud(); showHeld(); syncPlatformState();
 }
 function rememberProgress() {
   if (!run || practice) return;
   const r = recordFor(run.level.id); r.best = Math.max(r.best, progress(run)); if (run.state === 'complete') { r.complete = true; r.best = 100; } saveRecords();
 }
 function showMenu() {
-  clearDeathTimer(); if (run) rememberProgress(); clearInput(); inGame = false; if (run) run.state = 'ready';
+  clearDeathTimer(); if (run) rememberProgress(); clearInput(); sound.mute(); inGame = false; if (run) run.state = 'ready';
   $('game-view').hidden = true; $('menu').hidden = false; document.body.classList.remove('in-game'); buildMenu();
   history.replaceState(null, '', location.pathname + location.search); $('quick-play').focus({ preventScroll: true });
   if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+  syncPlatformState();
 }
 function pauseGame() {
-  if (run?.state !== 'playing') return;
+  clearInput(); sound.mute();
+  if (run?.state !== 'playing') { syncPlatformState(); return; }
   run.state = 'paused'; rememberProgress();
   overlay('paused', 'TAKE A BREATH', 'Paused', 'Your run is right where you left it.', 'Resume ↗', () => resumeGame(false));
+  syncPlatformState();
 }
-function resumeGame(initialHeld = false) { if (run?.state !== 'paused') return; clearInput(); held = initialHeld; run.state = 'playing'; hideOverlay(); }
+function resumeGame(initialHeld = false) { if (!appActive || document.hidden || run?.state !== 'paused') return; clearInput(); held = initialHeld; run.state = 'playing'; lastFrame = 0; sound.unlock(); hideOverlay(); showHeld(); syncPlatformState(); }
 const causeText = { boundary: 'the outer rail', block: 'a solid block', gate: 'a moving gate', divider: 'the central divider', saw: 'a rotating saw', spike: 'a spike' };
 function terminal(now) {
-  if (terminalHandled) return; terminalHandled = true; impactAt = now; clearInput(); rememberProgress(); $('pause').disabled = true;
+  if (terminalHandled) return; terminalHandled = true; impactAt = now; clearInput(); rememberProgress(); $('pause').disabled = true; syncPlatformState();
   const record = recordFor(run.level.id), value = progress(run), generation = runGeneration;
   if (run.state === 'dead') {
     sound.effect('dead');
@@ -178,6 +204,9 @@ function updateHud() {
   $('elapsed-label').textContent = `${Math.floor(run.time / 60)}:${String(Math.floor(run.time % 60)).padStart(2, '0')}`;
   $('wave-mode').textContent = `${run.dual ? 'DUAL ' : ''}${run.mini ? 'MINI' : 'NORMAL'} WAVE`;
   $('gravity-mode').textContent = run.gravity === -1 ? 'INVERTED / HOLD ↘' : 'HOLD ↗ / RELEASE ↘';
+  $('hold-direction').textContent = run.gravity === -1 ? '↘' : '↗';
+  $('hold-caption').textContent = run.gravity === -1 ? 'release to climb' : 'release to dive';
+  $('hold-button').setAttribute('aria-label', run.gravity === -1 ? 'Hold to dive; release to climb' : 'Hold to climb; release to dive');
   $('speed-mode').textContent = `${run.speedFactor.toFixed(2)}×`; $('practice-status').hidden = !practice;
   const event = run.events.at(-1);
   if (event && event !== lastEvent) { lastEvent = event; noticeUntil = run.time + 1.7; $('portal-notice').textContent = portalText(event); sound.effect('portal'); announce(portalText(event)); }
@@ -188,23 +217,31 @@ $('overlay-primary').addEventListener('click', () => primaryAction()); $('overla
 $('quick-play').addEventListener('click', () => selectLevel(0)); $('brand').addEventListener('click', showMenu); $('back').addEventListener('click', showMenu);
 $('restart').addEventListener('click', () => selectLevel(current)); $('pause').addEventListener('click', pauseGame);
 $('fullscreen').addEventListener('click', async () => { try { if (document.fullscreenElement) await document.exitFullscreen(); else await $('stage').requestFullscreen(); } catch { /* Browser decides whether fullscreen is available. */ } });
-if (!$('stage').requestFullscreen) $('fullscreen').hidden = true;
+if (nativeIOS || !$('stage').requestFullscreen) $('fullscreen').hidden = true;
 $('low-effects').checked = settings.lowEffects; $('portal-pulse').checked = settings.portalPulse;
-$('settings-open').addEventListener('click', () => { pauseGame(); $('settings-dialog').showModal(); });
+for (const id of ['settings-open', 'game-settings']) $(id).addEventListener('click', () => { pauseGame(); $('settings-dialog').showModal(); });
 for (const [id, key] of [['low-effects', 'lowEffects'], ['portal-pulse', 'portalPulse']]) $(id).addEventListener('change', () => { settings[key] = $(id).checked; saveSettings(); if (!inGame) buildMenu(); });
 $('settings-dialog').addEventListener('close', () => { if (inGame && !$('game-overlay').hidden) $('overlay-primary').focus({ preventScroll: true }); });
 
-canvas.addEventListener('pointerdown', event => {
-  if (!inGame || run?.state !== 'playing' || (event.pointerType === 'mouse' && event.button !== 0)) return;
-  event.preventDefault(); pointers.add(event.pointerId); held = true; canvas.focus({ preventScroll: true }); sound.unlock();
-  try { canvas.setPointerCapture(event.pointerId); } catch { /* Window listeners also release input. */ }
+for (const control of [canvas, $('hold-button')]) {
+  control.addEventListener('pointerdown', event => {
+    if (!appActive || document.hidden || !inGame || run?.state !== 'playing' || (event.pointerType === 'mouse' && event.button !== 0)) return;
+    event.preventDefault(); pointers.add(event.pointerId); refreshHeld(); sound.unlock();
+    if (control === canvas) canvas.focus({ preventScroll: true });
+    try { control.setPointerCapture(event.pointerId); } catch { /* Window listeners also release input. */ }
+  });
+  control.addEventListener('lostpointercapture', event => { pointers.delete(event.pointerId); refreshHeld(); });
+  control.addEventListener('contextmenu', event => event.preventDefault());
+}
+function pointerUp(event) { pointers.delete(event.pointerId); refreshHeld(); }
+window.addEventListener('pointerup', pointerUp);
+window.addEventListener('pointercancel', event => { if (pointers.has(event.pointerId)) { pointerUp(event); pauseGame(); } });
+$('hold-button').addEventListener('click', event => event.preventDefault());
+$('hold-button').addEventListener('keydown', event => {
+  if (event.code === 'Enter' && run?.state === 'playing' && appActive) { event.preventDefault(); keys.add('Enter'); refreshHeld(); sound.unlock(); }
 });
-function pointerUp(event) { pointers.delete(event.pointerId); held = pointers.size > 0 || keys.size > 0; }
-window.addEventListener('pointerup', pointerUp); canvas.addEventListener('lostpointercapture', pointerUp);
-window.addEventListener('pointercancel', event => { pointerUp(event); pauseGame(); });
-canvas.addEventListener('contextmenu', event => event.preventDefault());
 window.addEventListener('keydown', event => {
-  if (!inGame || event.metaKey || event.ctrlKey || event.altKey || $('settings-dialog').open) return;
+  if (!appActive || document.hidden || !inGame || event.metaKey || event.ctrlKey || event.altKey || $('settings-dialog').open) return;
   if (event.code === 'Tab' && !$('game-overlay').hidden) {
     const stops = [...(!$('practice-option').hidden ? [$('practice-toggle')] : []), ...(!practiceStart.hidden ? [practiceSector] : []), $('overlay-primary'), $('overlay-secondary')];
     event.preventDefault(); let i = stops.indexOf(document.activeElement); i = (i + (event.shiftKey ? -1 : 1) + stops.length) % stops.length; stops[i].focus(); return;
@@ -219,17 +256,24 @@ window.addEventListener('keydown', event => {
   if (run?.state === 'dead') { if (performance.now() - impactAt < 260) return; startRun(true, true); }
   else if (run?.state === 'ready') startRun(true);
   else if (run?.state === 'paused') resumeGame(true);
-  if (run?.state === 'playing') { keys.add(event.code); held = true; sound.unlock(); }
+  if (run?.state === 'playing') { keys.add(event.code); refreshHeld(); sound.unlock(); }
 });
-window.addEventListener('keyup', event => { keys.delete(event.code); held = keys.size > 0 || pointers.size > 0; if (inGame && isFlightKey(event.code) && !$('settings-dialog').open) event.preventDefault(); });
-window.addEventListener('blur', () => { clearInput(); pauseGame(); });
-document.addEventListener('visibilitychange', () => { if (document.hidden) { clearInput(); pauseGame(); } });
+window.addEventListener('keyup', event => { keys.delete(event.code); refreshHeld(); if (inGame && isFlightKey(event.code) && !$('settings-dialog').open) event.preventDefault(); });
+function interruptGame() { clearInput(); pauseGame(); lastFrame = 0; }
+window.addEventListener('blur', interruptGame);
+window.addEventListener('pagehide', interruptGame);
+document.addEventListener('visibilitychange', () => { if (document.hidden) interruptGame(); else { lastFrame = 0; syncPlatformState(); } });
+window.addEventListener('zankii:lifecycle', event => {
+  appActive = event.detail?.active === true;
+  if (!appActive) interruptGame();
+  else { lastFrame = 0; syncPlatformState(); }
+});
 window.addEventListener('hashchange', () => { const index = levels.findIndex(l => `#${l.id}` === location.hash); if (index >= 0 && (!inGame || current !== index)) selectLevel(index); else if (!location.hash && inGame) showMenu(); });
 
 function frame(now) {
   const delta = lastFrame ? Math.min((now - lastFrame) / 1000, .1) : 0; lastFrame = now;
   if (inGame && run) {
-    if (run.state === 'playing') {
+    if (appActive && !document.hidden && run.state === 'playing') {
       advance(run, held, delta); sound.tick(run.time, run.level);
       if (practice && run.state === 'playing') {
         const section = sectionAt(run.level, run.x), index = run.level.sections.indexOf(section);
@@ -241,7 +285,7 @@ function frame(now) {
   }
   requestAnimationFrame(frame);
 }
-buildFilters(); buildMenu(); buildLegend();
+buildFilters(); buildMenu(); buildLegend(); syncPlatformState();
 // Preserve links shared with the original three-course release without restoring retired records.
 const aliases = { '#mint': 0, '#lunar': 2, '#frog': 0 };
 const direct = levels.findIndex(l => `#${l.id}` === location.hash), linked = direct >= 0 ? direct : aliases[location.hash];

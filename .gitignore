@@ -1,2 +1,8 @@
 .DS_Store
 Thumbs.db
+DerivedData/
+build/
+*.xcuserstate
+xcuserdata/
+*.ipa
+*.xcarchive

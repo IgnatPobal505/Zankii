@@ -2,7 +2,17 @@
 
 **[Play in your browser →](https://ignatpobal505.github.io/Zankii/)**
 
-Hold. Release. Break through. Ten original Wave courses with blocks, slaloms, moving gates, rotating saws and five portal types. No installation, build step or external libraries.
+Hold. Release. Break through. Ten original Wave courses with blocks, slaloms, moving gates, rotating saws and five portal types. The iPhone app and browser game share the same engine and original courses.
+
+## iPhone app — current development focus
+
+Open **[ios/Zankii.xcodeproj](ios/Zankii.xcodeproj)** in Xcode 15 or newer on a Mac. iPhone, iOS 16+, landscape in both directions. All game assets are committed and bundled for offline play; no Node.js, server, CocoaPods or third-party dependency is needed to build the app. Choose your signing Team to install it on a device.
+
+The iPhone layout has a large **HOLD** button beside the playfield, **Pause / Resume**, **Restart**, **Levels**, **Sound** and **Settings**. It respects safe areas, clears held input and pauses on interruption, and prevents screen sleep during an active run. Browser records and app records are separate.
+
+**[Russian build instructions and device verification steps →](ios/README.md)**
+
+The native project has been checked structurally and the Swift sources parsed; an iOS build and real-device verification remain for the other Mac. The shared game and packaging/input tests pass. A browser preview is not an iOS device test.
 
 ## Ten different courses
 
@@ -23,7 +33,7 @@ All ten courses are available immediately. The final three are intentionally muc
 
 ## Controls
 
-- Hold **Space**, **A**, **any arrow key**, the **left mouse button**, or **touch the playing field** to climb.
+- Hold **HOLD**, **Space**, **A**, **any arrow key**, the **left mouse button**, or **touch the playing field** to climb.
 - Release to dive. Multiple held controls work together: releasing one does not cancel another.
 - **Inverted gravity reverses hold/release direction.** A visible restoration portal returns normal controls.
 - **R** restarts the course; **Esc** pauses/resumes. Switching away also pauses and releases input.
@@ -66,7 +76,9 @@ With Node.js 18 or newer:
 npm test
 ```
 
-The tests complete all ten courses with ordinary hold/release inputs and live collisions; exercise every portal type; check both members of a dual; validate moving hazards, practice entry/checkpoint state, 30/60/144 Hz consistency, instant direction changes, pausing and collision tunnelling. These simulations prove a playable input path exists; they do not replace human difficulty tuning.
+The tests complete all ten courses with ordinary hold/release inputs and live collisions; exercise every portal type; check both members of a dual; validate moving hazards, practice entry/checkpoint state, 30/60/144 Hz consistency, instant direction changes, pausing and collision tunnelling. They also check multiple touch/keyboard inputs, native interruption/resume behavior and offline iPhone packaging. These simulations prove a playable input path exists; they do not replace human difficulty tuning or native device testing.
+
+After changing shared sources, run `npm run ios:sync` and commit `ios/Zankii/Web` with them. `npm run ios:check` verifies the checked-in offline package. Xcode uses these ready-to-build local files without a JavaScript build phase.
 
 Main files: `engine.js` (courses and fixed-step simulation), `render.js` (Canvas graphics), `game.js` (UI, audio, storage and input), `styles.css` (responsive interface). GitHub Pages serves the root of `main`.
 

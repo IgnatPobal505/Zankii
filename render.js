@@ -1,4 +1,4 @@
-import { WORLD, PORTAL_INFO, polygonsFor, movingY, corridorAt, sectionAt } from './engine.js?v=2';
+import { WORLD, PORTAL_INFO, polygonsFor, movingY, corridorAt, sectionAt } from './engine.js?v=3';
 
 export const THEMES = {
   mint: ['#0b2228', '#112f32', '#91e3c3'], cyan: ['#0b1c2d', '#103447', '#70dbff'],
