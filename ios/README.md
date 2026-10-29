@@ -7,10 +7,23 @@
 1. Скачай **весь репозиторий** [IgnatPobal505/Zankii](https://github.com/IgnatPobal505/Zankii) или выполни `git clone https://github.com/IgnatPobal505/Zankii.git`.
 2. Открой `ios/Zankii.xcodeproj` в **Xcode 15 или новее** с установленной поддержкой iOS. Открывай именно этот проект, а не отдельный Swift-файл.
 3. Для проверки в симуляторе выбери схему **Zankii**, затем модель iPhone и нажми **Run ▶**. При необходимости поверни симулятор горизонтально.
-4. Для настоящего iPhone открой цель **Zankii → Signing & Capabilities**, оставь **Automatically manage signing**, выбери свой **Team** — учётную запись Apple. Если Xcode попросит уникальное имя приложения, измени **Bundle Identifier** с `com.ignatpobal505.zankii` на своё.
+4. Проект подписывается командой **WaiWai, LLC** (Team ID `R4A779QVVY`), Bundle Identifier — `school.wai.zankii`. Если ты в этой команде App Store Connect, ничего менять не нужно. Без неё открой цель **Zankii → Signing & Capabilities**, выбери свой **Team** и смени Bundle Identifier на своё, но такие изменения не коммить.
 5. Подключи iPhone, доверь устройству Mac и включи Developer Mode, если Xcode попросит. Выбери iPhone вместо симулятора и нажми **Run ▶**.
 
 Node.js, npm, CocoaPods, сервер и сторонние пакеты для этой сборки **не нужны**. Файлы игры уже включены в репозиторий. Для установки на устройство Xcode создаёт подпись приложения через выбранный Team. [Инструкция Apple](https://developer.apple.com/documentation/xcode/running-your-app-on-simulated-or-physical-devices).
+
+## TestFlight
+
+Zankii заведена в App Store Connect команды WaiWai, LLC под названием **Zankii**. Первая сборка — версия 0.3.0 (1), загружена 29 октября 2026. Её получают внутренние группы тестировщиков **Grigoriy — iPhone and iPad** и **wai school**. Новые сборки попадают к ним автоматически.
+
+Как выпустить новую сборку:
+
+1. Увеличь **Build** (`CURRENT_PROJECT_VERSION`) на единицу. Номер сборки нельзя повторять. При заметном обновлении игры увеличь и **Version** (`MARKETING_VERSION`).
+2. В Xcode выбери **Any iOS Device (arm64)**, затем **Product → Archive**.
+3. В окне Organizer нажми **Distribute App → App Store Connect → Upload**.
+4. Через 5–15 минут сборка появится в TestFlight.
+
+В `Info.plist` указано `ITSAppUsesNonExemptEncryption = NO`: игра не использует шифрование, поэтому TestFlight не спрашивает об этом при каждой загрузке.
 
 ## Кнопки на iPhone
 

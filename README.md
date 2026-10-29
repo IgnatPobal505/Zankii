@@ -6,13 +6,13 @@ Hold. Release. Break through. Ten original Wave courses with blocks, slaloms, mo
 
 ## iPhone app — current development focus
 
-Open **[ios/Zankii.xcodeproj](ios/Zankii.xcodeproj)** in Xcode 15 or newer on a Mac. iPhone, iOS 16+, landscape in both directions. All game assets are committed and bundled for offline play; no Node.js, server, CocoaPods or third-party dependency is needed to build the app. Choose your signing Team to install it on a device.
+Open **[ios/Zankii.xcodeproj](ios/Zankii.xcodeproj)** in Xcode 15 or newer on a Mac. iPhone, iOS 16+, landscape in both directions. All game assets are committed and bundled for offline play; no Node.js, server, CocoaPods or third-party dependency is needed to build the app. The project is signed by the WaiWai, LLC team as `school.wai.zankii` and is distributed through TestFlight.
 
 The iPhone layout has a large **HOLD** button beside the playfield, **Pause / Resume**, **Restart**, **Levels**, **Sound** and **Settings**. It respects safe areas, clears held input and pauses on interruption, and prevents screen sleep during an active run. Browser records and app records are separate.
 
 **[Russian build instructions and device verification steps →](ios/README.md)**
 
-The native project has been checked structurally and the Swift sources parsed; an iOS build and real-device verification remain for the other Mac. The shared game and packaging/input tests pass. A browser preview is not an iOS device test.
+Version 0.3.0 (build 1) was built and uploaded to TestFlight on 29 October 2026. It was played in the iPhone 17 simulator: start, HOLD, collisions, pause when the app goes to the background, level list and records after relaunch. Real-device verification remains. The shared game and packaging/input tests pass. A browser preview is not an iOS device test.
 
 ## Ten different courses
 
