@@ -2,7 +2,7 @@ import { WORLD, LEVELS, DIFFICULTIES, PORTAL_INFO, isFlightKey, createLevel, cre
 import { preview, render, accentFor, DIFFICULTY_COLORS } from './render.js?v=4';
 import { FlightTimeline } from './input-timeline.js?v=4';
 import { MusicPlayer } from './music-player.js?v=4';
-import { SOUNDTRACKS } from './soundtracks.js?v=4';
+import { SOUNDTRACKS } from './soundtracks.js?v=5';
 import { storedAudio, storeAudio, removeAudio } from './audio-storage.js?v=4';
 
 const $ = id => document.getElementById(id);
@@ -88,7 +88,7 @@ function buildSoundtracks() {
   }
   select.value = selectedTrack().id;
   $('music-source').href = selectedTrack().source;
-  $('music-source').textContent = `${selectedTrack().artist} / original track ↗`;
+  $('music-source').textContent = selectedTrack().sourceLabel || `${selectedTrack().artist} / original track ↗`;
   hudHidden('music-remove', !importedTracks.has(selectedTrack().id));
   updateMusicStatus();
 }

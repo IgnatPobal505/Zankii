@@ -6,10 +6,10 @@
     "render.js": "9ad97b5e9b9bdf2a1417f67604d21e6dfe0ae9c4949a82724add8c2f393a5737",
     "input-timeline.js": "cb079c97c10b98a847c98e9cf680341c2ebe79b4164f9cd8eedf27c8d681f177",
     "music-player.js": "1a5390f510b8e0589b6b777e3d625fd88aee193a526167816b6186ad50f0f355",
-    "soundtracks.js": "570dbb48d749818473c0fb1c584a741b3d8ad2f877520bfddc45c7b0485c5446",
+    "soundtracks.js": "0d66c69a0e07fd58e8f72c7b2b7027d788813b51f66cd98f85e1015cb3df618c",
     "audio-storage.js": "797a652d7a68dd1b6a88ef3f64b96bcc78cc8711c1bb534e776ffb823dc099f9",
-    "game.js": "130a9aa8ced454df205c1482bf48273985d048bd2d9036ae36622059014296e8",
-    "index.html": "64339062e6493a7659c99cfd0755a89ccda42149965fd1eee8528dded1f89ec6",
+    "game.js": "169dd7aa4180ebc964c3de1054e9eb9e1fbd6ff20ca18dd79c2169bc1423a4d5",
+    "index.html": "e8ef38bb261b0676c5a13acd0aa5b4422eae61e4724bea649205a114c282a750",
     "styles.css": "6aa07d775cb54104ea1946e3fa70a05c54de94982ba9402af376c3760c7c1134",
     "favicon.svg": "8650cba200375ccc556d24f11a965706776d7f9b0e738e4f9b82325e2b3cf063"
   },
@@ -17,7 +17,7 @@
     "index.html": "607d9e6aa66f92b5e50c45d3c2db3912b7e9b71cf7a635b212e8f9ccd9532652",
     "styles.css": "6aa07d775cb54104ea1946e3fa70a05c54de94982ba9402af376c3760c7c1134",
     "favicon.svg": "8650cba200375ccc556d24f11a965706776d7f9b0e738e4f9b82325e2b3cf063",
-    "zankii.js": "d8c384db96af5523df70849aaad030b9f89714596b5d23583c38bfb64b0a82f5",
+    "zankii.js": "788fdc3d2793fac376270df935a6fcb20f1536b859ed928a3e6b780a1a1fdb70",
     "assets/music/at-the-speed-of-light.mp3": "d4d9ca1ac611a4d287bfff5161cb83a9705b8efc516907c69f83b1319825ec05",
     "assets/music/CREDITS.md": "1b2f1a967fe19d5d01b2a44b1706446d406127a574f49d6c7d78ed2dcd47fb2c",
     "assets/music/README.md": "0dcc023d183015be5ebdaf9aade802ec01a9add614e695a091cf52ff43ec8858"

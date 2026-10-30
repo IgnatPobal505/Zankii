@@ -65,11 +65,33 @@
       "permissionSource": "https://rukkus.newgrounds.com/news/post/1505470",
       "downloaded": false,
       "interpretationRejectedByUser": true
+    },
+    {
+      "id": "artemis-13",
+      "userLabel": "Artemis 13",
+      "title": "Artemis 13",
+      "checkedDate": "2026-10-30",
+      "status": "catalog-level-soundtrack-reference-no-audio",
+      "userConfirmedTitle": true,
+      "levelId": 148598469,
+      "levelPublisher": "Mvngo",
+      "levelVerifier": "Zoink",
+      "sourceUrl": "https://pointercrate.com/demonlist/2/",
+      "verificationVideo": "https://youtu.be/FgjOM0ef1N8",
+      "publishedNewgroundsSong": {
+        "title": "Headrush",
+        "artist": "Rukkus / NIGHTkilla",
+        "newgroundsId": 462046,
+        "sourceUrl": "https://www.newgrounds.com/audio/listen/462046"
+      },
+      "note": "The user confirms Artemis 13 as the requested name after rejecting the Astronaut - 13 label. Keep Artemis 13 in the UI. Pointercrate supplies the level and current Newgrounds replacement metadata; this does not confirm that the replacement is the exact recording the user wants. Local file import supports the chosen recording without redistributing it.",
+      "downloaded": false
     }
   ],
   "pendingUserTrack": {
     "userLabel": "Artemis 13",
-    "status": "awaiting-exact-name-from-user",
-    "lastReplyDate": "2026-10-30"
+    "status": "title-confirmed-and-listed-as-level-soundtrack-reference",
+    "lastReplyDate": "2026-10-30",
+    "exactRecordingConfirmed": false
   }
 }

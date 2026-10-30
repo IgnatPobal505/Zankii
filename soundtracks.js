@@ -28,6 +28,13 @@ export const SOUNDTRACKS = [
     permissionSource: 'https://www.newgrounds.com/audio/listen/360804'
   },
   {
+    id: 'artemis-13', title: 'Artemis 13', artist: 'Rukkus / NIGHTkilla',
+    source: 'https://pointercrate.com/demonlist/2/',
+    sourceLabel: 'Artemis 13 / level and soundtrack ↗', src: '',
+    license: 'Level soundtrack reference; no audio recording is bundled', licenseUrl: '',
+    permissionSource: ''
+  },
+  {
     id: 'phobos', title: '[Phobos]*', artist: 'Solkrieg',
     source: 'https://www.newgrounds.com/audio/listen/436814', src: '',
     license: 'CC BY-NC-SA 3.0 — attribution, noncommercial, ShareAlike',
