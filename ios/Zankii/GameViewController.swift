@@ -40,7 +40,7 @@ final class GameViewController: UIViewController {
         configuration.defaultWebpagePreferences.allowsContentJavaScript = true
         configuration.allowsInlineMediaPlayback = true
         configuration.mediaTypesRequiringUserActionForPlayback = []
-        configuration.applicationNameForUserAgent = "Zankii-iOS/0.3"
+        configuration.applicationNameForUserAgent = "Zankii-iOS/0.3.1"
 
         webView = WKWebView(frame: .zero, configuration: configuration)
         webView.translatesAutoresizingMaskIntoConstraints = false

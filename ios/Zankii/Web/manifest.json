@@ -2,17 +2,24 @@
   "format": 1,
   "generator": "scripts/sync-ios-web.mjs",
   "sources": {
-    "engine.js": "4dbfb4ce410c4b382e6eb2468c80bb821d6512e5f24925dfa7ea4d7c4eb056fd",
-    "render.js": "00c4a3c11e275249a321a2274caba73dd804ca14f9010246cb12f6ea33c01141",
-    "game.js": "d1105088da6ce364c5ff3ae395cc6605c684d63a5278e06ceb58f0a4f8822c84",
-    "index.html": "6addf08f7cb15e09fae90428e32145f7cd4470756f424b1d45c3fd4b0e2fe2cf",
-    "styles.css": "b93a26e6317e07919d408515ad35d2618a6e0382489b8d9696f1d471c7f7c1c8",
+    "engine.js": "b1f75fb3abd5ee6d1e81a32336e2c08580a7250895a0958dcc609dc8b3c0da72",
+    "render.js": "9ad97b5e9b9bdf2a1417f67604d21e6dfe0ae9c4949a82724add8c2f393a5737",
+    "input-timeline.js": "cb079c97c10b98a847c98e9cf680341c2ebe79b4164f9cd8eedf27c8d681f177",
+    "music-player.js": "1a5390f510b8e0589b6b777e3d625fd88aee193a526167816b6186ad50f0f355",
+    "soundtracks.js": "570dbb48d749818473c0fb1c584a741b3d8ad2f877520bfddc45c7b0485c5446",
+    "audio-storage.js": "797a652d7a68dd1b6a88ef3f64b96bcc78cc8711c1bb534e776ffb823dc099f9",
+    "game.js": "130a9aa8ced454df205c1482bf48273985d048bd2d9036ae36622059014296e8",
+    "index.html": "64339062e6493a7659c99cfd0755a89ccda42149965fd1eee8528dded1f89ec6",
+    "styles.css": "6aa07d775cb54104ea1946e3fa70a05c54de94982ba9402af376c3760c7c1134",
     "favicon.svg": "8650cba200375ccc556d24f11a965706776d7f9b0e738e4f9b82325e2b3cf063"
   },
   "files": {
-    "index.html": "ea35f48b3ca3eb211bf10566d627fddd9aa5f7a0a6af23dece42afe23a2e4b4d",
-    "styles.css": "b93a26e6317e07919d408515ad35d2618a6e0382489b8d9696f1d471c7f7c1c8",
+    "index.html": "607d9e6aa66f92b5e50c45d3c2db3912b7e9b71cf7a635b212e8f9ccd9532652",
+    "styles.css": "6aa07d775cb54104ea1946e3fa70a05c54de94982ba9402af376c3760c7c1134",
     "favicon.svg": "8650cba200375ccc556d24f11a965706776d7f9b0e738e4f9b82325e2b3cf063",
-    "zankii.js": "30ec1c37a6789aeaac3fafcd4d9d18d2762c262bcdc4368229c40fd3841fe061"
+    "zankii.js": "d8c384db96af5523df70849aaad030b9f89714596b5d23583c38bfb64b0a82f5",
+    "assets/music/at-the-speed-of-light.mp3": "d4d9ca1ac611a4d287bfff5161cb83a9705b8efc516907c69f83b1319825ec05",
+    "assets/music/CREDITS.md": "1b2f1a967fe19d5d01b2a44b1706446d406127a574f49d6c7d78ed2dcd47fb2c",
+    "assets/music/README.md": "0dcc023d183015be5ebdaf9aade802ec01a9add614e695a091cf52ff43ec8858"
   }
 }

@@ -3,6 +3,8 @@ import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { Script, runInNewContext } from 'node:vm';
 import { syncIOSWeb, bundleModules } from '../scripts/sync-ios-web.mjs';
+import { SOUNDTRACKS } from '../soundtracks.js';
+import { createHash } from 'node:crypto';
 
 test('the committed iPhone game is current, offline and valid classic JavaScript', async () => {
   const files = await syncIOSWeb({ check: true });
@@ -13,8 +15,13 @@ test('the committed iPhone game is current, offline and valid classic JavaScript
     .map(match => match[1]).filter(url => !url.includes('://'));
   for (const resource of resources) assert.ok(Object.hasOwn(files, resource), `Missing offline resource ${resource}`);
   const manifest = JSON.parse(files['manifest.json']);
-  assert.equal(Object.keys(manifest.sources).length, 6);
-  assert.deepEqual(Object.keys(manifest.files).sort(), ['favicon.svg', 'index.html', 'styles.css', 'zankii.js']);
+  assert.equal(Object.keys(manifest.sources).length, 10);
+  for (const name of ['favicon.svg', 'index.html', 'styles.css', 'zankii.js']) assert.ok(Object.hasOwn(manifest.files, name));
+  for (const track of SOUNDTRACKS.filter(track => track.src)) {
+    assert.ok(Buffer.isBuffer(files[track.src]) && files[track.src].length > 1000000, 'A real music file is packaged offline');
+    assert.equal(createHash('sha256').update(files[track.src]).digest('hex'), manifest.files[track.src]);
+  }
+  assert.ok(Object.hasOwn(files, 'assets/music/CREDITS.md'));
 });
 
 test('offline bundling preserves module scopes and rejects unknown dependencies', () => {

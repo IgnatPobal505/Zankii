@@ -1,4 +1,4 @@
-import { WORLD, PORTAL_INFO, polygonsFor, movingY, corridorAt, sectionAt } from './engine.js?v=3';
+import { WORLD, PORTAL_INFO, polygonsFor, movingY, corridorAt, sectionAt } from './engine.js?v=4';
 
 export const THEMES = {
   mint: ['#0b2228', '#112f32', '#91e3c3'], cyan: ['#0b1c2d', '#103447', '#70dbff'],
@@ -9,6 +9,15 @@ export const THEMES = {
 };
 export const DIFFICULTY_COLORS = { Easy: '#8ee0b1', Normal: '#7dcfff', Hard: '#ffc878', Insane: '#ee9dda', Extreme: '#ff7f91' };
 export const accentFor = level => THEMES[level.theme][2];
+const gradients = new WeakMap(), sawShapes = new Map();
+function skyGradient(ctx, theme) {
+  let cache = gradients.get(ctx); if (!cache) { cache = new Map(); gradients.set(ctx, cache); }
+  if (!cache.has(theme)) {
+    const gradient = ctx.createLinearGradient(0, 0, 0, 720);
+    gradient.addColorStop(0, THEMES[theme][0]); gradient.addColorStop(1, THEMES[theme][1]); cache.set(theme, gradient);
+  }
+  return cache.get(theme);
+}
 function poly(ctx, points, offset) { ctx.beginPath(); points.forEach((p, i) => i ? ctx.lineTo(p.x - offset, p.y) : ctx.moveTo(p.x - offset, p.y)); ctx.closePath(); }
 
 export function fatWave(ctx, x, y, size = 20, up = true, glow = true) {
@@ -21,23 +30,28 @@ export function fatWave(ctx, x, y, size = 20, up = true, glow = true) {
   ctx.restore();
 }
 function backdrop(ctx, level, offset, low) {
-  const [sky, floor, accent] = THEMES[level.theme];
-  const gradient = ctx.createLinearGradient(0, 0, 0, 720); gradient.addColorStop(0, sky); gradient.addColorStop(1, floor);
-  ctx.fillStyle = gradient; ctx.fillRect(0, 0, 1280, 720);
+  const [, , accent] = THEMES[level.theme];
+  ctx.fillStyle = skyGradient(ctx, level.theme); ctx.fillRect(0, 0, 1280, 720);
   ctx.lineWidth = 1; ctx.strokeStyle = accent + '0b';
   const grid = low ? 128 : 64;
-  for (let x = -(offset * .2 % grid); x < 1280; x += grid) { ctx.beginPath(); ctx.moveTo(x, 54); ctx.lineTo(x, 666); ctx.stroke(); }
-  for (let y = 90; y < 660; y += grid) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1280, y); ctx.stroke(); }
+  ctx.beginPath();
+  for (let x = -(offset * .2 % grid); x < 1280; x += grid) { ctx.moveTo(x, 54); ctx.lineTo(x, 666); }
+  for (let y = 90; y < 660; y += grid) { ctx.moveTo(0, y); ctx.lineTo(1280, y); }
+  ctx.stroke();
   if (!low) {
     ctx.strokeStyle = accent + '12'; ctx.lineWidth = 2;
-    for (let x = -(offset * .4 % 480); x < 1400; x += 480) { ctx.beginPath(); ctx.moveTo(x, 54); ctx.lineTo(x + 180, 250); ctx.lineTo(x + 180, 470); ctx.lineTo(x + 360, 666); ctx.stroke(); }
+    ctx.beginPath();
+    for (let x = -(offset * .4 % 480); x < 1400; x += 480) { ctx.moveTo(x, 54); ctx.lineTo(x + 180, 250); ctx.lineTo(x + 180, 470); ctx.lineTo(x + 360, 666); }
+    ctx.stroke();
     if (level.theme === 'lunar') { ctx.fillStyle = '#c8caff09'; ctx.beginPath(); ctx.arc(1040 - offset * .02 % 180, 270, 115, 0, 7); ctx.fill(); }
   }
   ctx.fillStyle = '#0a1022'; ctx.fillRect(0, 0, 1280, WORLD.ceiling); ctx.fillRect(0, WORLD.floor, 1280, 54);
   ctx.strokeStyle = accent + 'aa'; ctx.lineWidth = 3;
-  for (const y of [54, 666]) { ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(1280, y); ctx.stroke(); }
+  ctx.beginPath(); for (const y of [54, 666]) { ctx.moveTo(0, y); ctx.lineTo(1280, y); } ctx.stroke();
   ctx.strokeStyle = accent + '35'; ctx.lineWidth = 2;
-  for (let x = -(offset % 40); x < 1320; x += 40) { ctx.beginPath(); ctx.moveTo(x, 10); ctx.lineTo(x + 28, 38); ctx.moveTo(x, 682); ctx.lineTo(x + 28, 710); ctx.stroke(); }
+  ctx.beginPath();
+  for (let x = -(offset % 40); x < 1320; x += 40) { ctx.moveTo(x, 10); ctx.lineTo(x + 28, 38); ctx.moveTo(x, 682); ctx.lineTo(x + 28, 710); }
+  ctx.stroke();
   ctx.font = '11px ui-monospace, monospace'; ctx.fillStyle = accent + '65';
   const section = sectionAt(level, offset + 650);
   ctx.fillText(`${String(level.index + 1).padStart(2, '0')} // ${section.name.toUpperCase()}`, 23, 700);
@@ -48,7 +62,9 @@ function block(ctx, points, offset, accent, low, moving = false) {
   if (!low) {
     ctx.save(); poly(ctx, points, offset); ctx.clip(); ctx.strokeStyle = (moving ? '#ffbc72' : accent) + '1c'; ctx.lineWidth = 1;
     const xs = points.map(p => p.x), ys = points.map(p => p.y), left = Math.min(...xs), right = Math.max(...xs), top = Math.min(...ys), bottom = Math.max(...ys);
-    for (let x = left - (bottom - top); x < right + 80; x += 44) { ctx.beginPath(); ctx.moveTo(x - offset, top); ctx.lineTo(x + bottom - top - offset, bottom); ctx.stroke(); }
+    ctx.beginPath();
+    for (let x = left - (bottom - top); x < right + 80; x += 44) { ctx.moveTo(x - offset, top); ctx.lineTo(x + bottom - top - offset, bottom); }
+    ctx.stroke();
     ctx.restore();
   }
   // Inner line helps distinguish solid collision edges from distant decoration.
@@ -62,7 +78,8 @@ function saw(ctx, object, offset, time, low) {
   ctx.save(); ctx.strokeStyle = '#ffac7745'; ctx.setLineDash([4, 7]); ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(x, object.cy - object.amplitude); ctx.lineTo(x, object.cy + object.amplitude); ctx.stroke(); ctx.setLineDash([]);
   ctx.translate(x, y); ctx.rotate(low ? 0 : time * 1.5); ctx.beginPath();
-  for (let i = 0; i < 32; i++) { const a = i / 32 * Math.PI * 2, d = i % 2 ? r * .78 : r; i ? ctx.lineTo(Math.cos(a) * d, Math.sin(a) * d) : ctx.moveTo(Math.cos(a) * d, Math.sin(a) * d); }
+  if (!sawShapes.has(r)) sawShapes.set(r, Array.from({ length: 32 }, (_, i) => { const a = i / 32 * Math.PI * 2, d = i % 2 ? r * .78 : r; return [Math.cos(a) * d, Math.sin(a) * d]; }));
+  sawShapes.get(r).forEach(([px, py], i) => i ? ctx.lineTo(px, py) : ctx.moveTo(px, py));
   ctx.closePath(); ctx.fillStyle = '#ea9272'; ctx.fill(); ctx.strokeStyle = '#ffd6b8'; ctx.lineWidth = 1.3; ctx.stroke();
   ctx.beginPath(); ctx.arc(0, 0, r, 0, 7); ctx.strokeStyle = '#ffc9a987'; ctx.lineWidth = 1; ctx.stroke();
   ctx.beginPath(); ctx.arc(0, 0, r * .36, 0, 7); ctx.fillStyle = '#3c3040'; ctx.fill(); ctx.strokeStyle = '#ffc29e'; ctx.lineWidth = 2; ctx.stroke();
@@ -91,9 +108,10 @@ function drawPortal(ctx, p, offset, low) {
   if (p.exit) { ctx.beginPath(); ctx.moveTo(x + 30, p.targetY); ctx.lineTo(x + 54, p.targetY); ctx.strokeStyle = color; ctx.lineWidth = 2; ctx.stroke(); ctx.beginPath(); ctx.moveTo(x + 54, p.targetY); ctx.lineTo(x + 46, p.targetY - 6); ctx.lineTo(x + 46, p.targetY + 6); ctx.closePath(); ctx.fill(); }
   ctx.restore();
 }
-function trail(ctx, points, offset, low, secondary = false) {
+function trail(ctx, points, offset, low, endX, endY, secondary = false) {
   if (!points.length) return; ctx.save(); ctx.beginPath();
   points.forEach((p, i) => !i || p.break ? ctx.moveTo(p.x - offset, p.y) : ctx.lineTo(p.x - offset, p.y));
+  ctx.lineTo(endX - offset, endY);
   ctx.lineWidth = secondary ? 3 : 4; ctx.lineJoin = 'miter'; ctx.strokeStyle = secondary ? '#c9a4ff' : '#9dbbff';
   if (!low) { ctx.shadowColor = secondary ? '#bc6cff' : '#8272ff'; ctx.shadowBlur = 7; } ctx.stroke(); ctx.restore();
 }
@@ -116,8 +134,8 @@ export function render(ctx, level, run, settings = {}, playerScreenX = WORLD.pla
   for (const p of level.portals) { drawPortal(ctx, p, offset, low); if (p.type === 'teleport') drawPortal(ctx, { ...p, x: p.targetX, exit: true }, offset, low); }
   const finish = level.length - offset;
   if (finish > -20 && finish < 1320) { ctx.save(); ctx.setLineDash([12, 12]); ctx.strokeStyle = accent; ctx.lineWidth = 5; ctx.beginPath(); ctx.moveTo(finish, 100); ctx.lineTo(finish, 620); ctx.stroke(); ctx.setLineDash([]); ctx.font = 'bold 14px sans-serif'; ctx.fillStyle = accent; ctx.fillText('FINISH', finish - 25, 90); ctx.restore(); }
-  trail(ctx, [...run.trail, { x: run.x, y: run.y }], offset, low);
-  if (run.dual) trail(ctx, [...run.trail2, { x: run.x, y: run.y2 }], offset, low, true);
+  trail(ctx, run.trail, offset, low, run.x, run.y);
+  if (run.dual) trail(ctx, run.trail2, offset, low, run.x, run.y2, true);
   const rising = (run.lastHeld ? -1 : 1) * run.gravity < 0;
   if (run.state !== 'dead') { fatWave(ctx, playerScreenX, run.y, run.mini ? 11 : 20, rising, !low); if (run.dual) fatWave(ctx, playerScreenX, run.y2, run.mini ? 11 : 20, !rising, !low); }
   if (run.collision) {

@@ -20,7 +20,11 @@ export const LEVELS = [
   course('phase-factory', 'Phase Factory', 'Hard', 'lime', 305, 190, 140, 'Moving machinery meets Mini Wave and gravity switches.', ['launch', 'gates', 'mini', 'invert', 'steps', 'teleport', 'gates', 'boost', 'finish']),
   course('redline', 'Redline', 'Insane', 'red', 325, 156, 148, 'Fast slalom, narrow gates and very little recovery room.', ['launch', 'boost', 'slalom', 'gates', 'mini', 'saws', 'invert', 'boost', 'gates', 'finish']),
   course('event-horizon', 'Event Horizon', 'Insane', 'ice', 330, 150, 152, 'Dual lanes, sharp transfers and inverted precision.', ['launch', 'invert', 'teleport', 'dual', 'mini', 'gates', 'dual', 'boost', 'saws', 'finish']),
-  course('final-protocol', 'Final Protocol', 'Extreme', 'gold', 345, 132, 160, 'Every mechanic. Three pressure peaks. One clean finish.', ['launch', 'boost', 'mini', 'gates', 'invert', 'dual', 'teleport', 'mini', 'boost', 'dual', 'saws', 'finish'])
+  course('final-protocol', 'Final Protocol', 'Extreme', 'gold', 345, 132, 160, 'Every mechanic. Three pressure peaks. One clean finish.', ['launch', 'boost', 'mini', 'gates', 'invert', 'dual', 'teleport', 'mini', 'boost', 'dual', 'saws', 'finish']),
+  course('arcade-passage', 'Arcade Passage', 'Easy', 'mint', 245, 300, 116, 'Read wide gates, sweep through blocks and take your first rift.', ['launch', 'gates', 'slalom', 'teleport', 'saws', 'finish']),
+  course('neon-relay', 'Neon Relay', 'Normal', 'cyan', 270, 250, 126, 'Relay from spinning saws to inverted lanes and a linked exit.', ['launch', 'saws', 'invert', 'teleport', 'steps', 'gates', 'finish']),
+  course('split-signal', 'Split Signal', 'Hard', 'violet', 300, 195, 142, 'Mini precision, a rift transfer and two tightly paired lanes.', ['launch', 'mini', 'gates', 'teleport', 'dual', 'steps', 'finish']),
+  course('blackout-circuit', 'Blackout Circuit', 'Insane', 'red', 325, 154, 154, 'Split early. Accelerate. Invert. Finish with a Mini gauntlet.', ['launch', 'dual', 'boost', 'invert', 'gates', 'teleport', 'slalom', 'mini', 'finish'])
 ];
 export const DIFFICULTIES = ['Easy', 'Normal', 'Hard', 'Insane', 'Extreme'];
 export function seeded(seed) { return () => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296; }; }

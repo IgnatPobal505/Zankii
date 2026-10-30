@@ -1,0 +1,75 @@
+{
+  "checkedDate": "2026-10-29",
+  "scope": "Official author pages and public download links for requested Geometry Dash music. A Geometry Dash whitelist or download count does not establish permission for a separate game.",
+  "tracks": [
+    {
+      "id": "at-the-speed-of-light",
+      "title": "At the Speed of Light",
+      "artist": "Dimrain47",
+      "newgroundsId": 467339,
+      "sourceUrl": "https://www.newgrounds.com/audio/listen/467339",
+      "artistUrl": "https://dimrain47.newgrounds.com/",
+      "license": "CC BY-NC 3.0 Unported",
+      "licenseUrl": "https://creativecommons.org/licenses/by-nc/3.0/",
+      "legalCodeUrl": "https://creativecommons.org/licenses/by-nc/3.0/legalcode",
+      "status": "bundled-for-noncommercial-use",
+      "conditions": [
+        "Credit the artist and title, link the original source and license, and state whether changes were made.",
+        "The Creative Commons grant is noncommercial. Do not treat the page's additional web-game exception as permission to monetize an iOS app.",
+        "Preserve the license freedoms when distributing the asset. The native App Store release must be reviewed separately before publication."
+      ],
+      "download": {
+        "method": "The author page exposes a public Download this song button. Its ordinary redirect supplied this public Newgrounds download CDN URL; no login, cookies, or access-control bypass was used.",
+        "buttonUrl": "https://www.newgrounds.com/audio/download/467339",
+        "resolvedPublicUrl": "https://audio-download.ngfiles.com/467000/467339_At_the_Speed_of_Light_FINA.mp3?f1634992469",
+        "localPath": "assets/music/at-the-speed-of-light.mp3",
+        "bytes": 10020487,
+        "sha256": "d4d9ca1ac611a4d287bfff5161cb83a9705b8efc516907c69f83b1319825ec05",
+        "durationSeconds": 250.409775,
+        "format": "MPEG Layer III, stereo, 44100 Hz, 320000 bit/s",
+        "modifications": "None. Original downloaded MP3 bytes; local filename changed for clarity.",
+        "retrievedDate": "2026-10-29"
+      }
+    },
+    {
+      "id": "surface",
+      "title": "Surface",
+      "artist": "Dimrain47",
+      "newgroundsId": 63082,
+      "sourceUrl": "https://www.newgrounds.com/audio/listen/63082",
+      "status": "permission-required-not-bundled",
+      "reason": "The current official Licensing Terms require contacting the artist to discuss project use. A Download button exists, but no public redistribution grant was found on that page.",
+      "downloaded": false
+    },
+    {
+      "id": "operation-evolution",
+      "title": "Operation: Evolution",
+      "artist": "Dimrain47",
+      "newgroundsId": 109650,
+      "sourceUrl": "https://www.newgrounds.com/audio/listen/109650",
+      "status": "permission-required-not-bundled",
+      "reason": "The current official Licensing Terms require contacting the artist to discuss project use. A Download button exists, but no public redistribution grant was found on that page.",
+      "downloaded": false
+    },
+    {
+      "id": "astronaut-13-rukkus-remix",
+      "userLabel": "Artemis13",
+      "title": "Astronaut - 13 (Rukkus Remix)",
+      "artist": "Rukkus; original by Astronaut",
+      "sourceUrl": "https://soundcloud.com/rukkusoff/astronaut-13-rukkus-remix",
+      "alternateOfficialUrl": "https://www.youtube.com/watch?v=hsh0D6oxspY",
+      "interpretation": "User rejected this interpretation on 2026-10-30 and will provide the intended track name.",
+      "interpretationConfirmedByUser": false,
+      "status": "rejected-identification-not-bundled",
+      "reason": "Rukkus publicly permits credited use of his music for games, but this is a remix of Astronaut material and no grant from the original rights holder was established. The former Newgrounds submission 597874 is inaccessible.",
+      "permissionSource": "https://rukkus.newgrounds.com/news/post/1505470",
+      "downloaded": false,
+      "interpretationRejectedByUser": true
+    }
+  ],
+  "pendingUserTrack": {
+    "userLabel": "Artemis 13",
+    "status": "awaiting-exact-name-from-user",
+    "lastReplyDate": "2026-10-30"
+  }
+}

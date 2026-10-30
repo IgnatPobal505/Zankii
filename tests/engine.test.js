@@ -23,11 +23,11 @@ for (let i = 0; i < LEVELS.length; i++) {
     assert.ok(Math.abs(run.time - level.seconds) < .6);
   });
 }
-test('Campaign has ten distinct English courses, five portal types and three expert challenges', () => {
-  assert.equal(LEVELS.length, 10); assert.equal(new Set(LEVELS.map(l => l.id)).size, 10);
-  assert.equal(new Set(LEVELS.map(l => l.sequence.join('/'))).size, 10);
-  assert.equal(LEVELS.filter(l => ['Insane', 'Extreme'].includes(l.difficulty)).length, 3);
-  assert.ok(LEVELS.slice(7).every(l => l.gap <= 156));
+test('Campaign has fourteen distinct English courses, five portal types and four expert challenges', () => {
+  assert.equal(LEVELS.length, 14); assert.equal(new Set(LEVELS.map(l => l.id)).size, 14);
+  assert.equal(new Set(LEVELS.map(l => l.sequence.join('/'))).size, 14);
+  assert.equal(LEVELS.filter(l => ['Insane', 'Extreme'].includes(l.difficulty)).length, 4);
+  assert.ok(LEVELS.slice(7, 10).every(l => l.gap <= 156));
   assert.equal(LEVELS.some(l => l.id === 'frog'), false);
   assert.equal(LEVELS.some(l => /[а-яё]/i.test(l.name + l.subtitle)), false);
   assert.deepEqual([...new Set(LEVELS.flatMap((_, i) => createLevel(i).mechanics))].sort(), ['dual', 'gravity', 'size', 'speed', 'teleport']);
